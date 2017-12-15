@@ -26,11 +26,11 @@ validParams<ACInterface>()
 ACInterface::ACInterface(const InputParameters & parameters)
   : DerivativeMaterialInterface<JvarMapKernelInterface<Kernel>>(parameters),
     _L(getMaterialProperty<Real>("mob_name")),
-    _kappa(getMaterialProperty<Real>("kappa_name")),
+    _kappa(getMaterialProperty<RealTensorValue>("kappa_name")),
     _variable_L(getParam<bool>("variable_L")),
     _dLdop(getMaterialPropertyDerivative<Real>("mob_name", _var.name())),
     _d2Ldop2(getMaterialPropertyDerivative<Real>("mob_name", _var.name(), _var.name())),
-    _dkappadop(getMaterialPropertyDerivative<Real>("kappa_name", _var.name())),
+    _dkappadop(getMaterialPropertyDerivative<RealTensorValue>("kappa_name", _var.name())),
     _nvar(_coupled_moose_vars.size()),
     _dLdarg(_nvar),
     _d2Ldargdop(_nvar),
@@ -64,7 +64,7 @@ void
 ACInterface::initialSetup()
 {
   validateCoupling<Real>("mob_name");
-  validateCoupling<Real>("kappa_name");
+  validateCoupling<RealTensorValue>("kappa_name");
 }
 
 RealGradient
