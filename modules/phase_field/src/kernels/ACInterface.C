@@ -4,11 +4,11 @@
 /*          All contents are licensed under LGPL V2.1           */
 /*             See LICENSE for full restrictions                */
 /****************************************************************/
-#include "ACInterfaceAniso.h"
+#include "ACInterface.h"
 
 template <>
 InputParameters
-validParams<ACInterfaceAniso>()
+validParams<ACInterface>()
 {
   InputParameters params = validParams<Kernel>();
   params.addClassDescription("Gradient energy Allen-Cahn Kernel");
@@ -23,14 +23,14 @@ validParams<ACInterfaceAniso>()
   return params;
 }
 
-ACInterfaceAniso::ACInterfaceAniso(const InputParameters & parameters)
+ACInterface::ACInterface(const InputParameters & parameters)
   : DerivativeMaterialInterface<JvarMapKernelInterface<Kernel>>(parameters),
     _L(getMaterialProperty<Real>("mob_name")),
-    _kappa(getMaterialProperty<RealTensorValue>("kappa_name")),
+    _kappa(getMaterialProperty<Real>("kappa_name")),
     _variable_L(getParam<bool>("variable_L")),
     _dLdop(getMaterialPropertyDerivative<Real>("mob_name", _var.name())),
     _d2Ldop2(getMaterialPropertyDerivative<Real>("mob_name", _var.name(), _var.name())),
-    _dkappadop(getMaterialPropertyDerivative<RealTensorValue>("kappa_name", _var.name())),
+    _dkappadop(getMaterialPropertyDerivative<Real>("kappa_name", _var.name())),
     _nvar(_coupled_moose_vars.size()),
     _dLdarg(_nvar),
     _d2Ldargdop(_nvar),
@@ -47,7 +47,7 @@ ACInterfaceAniso::ACInterfaceAniso(const InputParameters & parameters)
       mooseError("The kernel variable should not be specified in the coupled `args` parameter.");
 
     _dLdarg[i] = &getMaterialPropertyDerivative<Real>("mob_name", iname);
-    _dkappadarg[i] = &getMaterialPropertyDerivative<RealTensorValue>("kappa_name", iname);
+    _dkappadarg[i] = &getMaterialPropertyDerivative<Real>("kappa_name", iname);
 
     _d2Ldargdop[i] = &getMaterialPropertyDerivative<Real>("mob_name", iname, _var.name());
 
@@ -61,14 +61,14 @@ ACInterfaceAniso::ACInterfaceAniso(const InputParameters & parameters)
 }
 
 void
-ACInterfaceAniso::initialSetup()
+ACInterface::initialSetup()
 {
   validateCoupling<Real>("mob_name");
-  validateCoupling<RealTensorValue>("kappa_name");
+  validateCoupling<Real>("kappa_name");
 }
 
 RealGradient
-ACInterfaceAniso::gradL()
+ACInterface::gradL()
 {
   RealGradient g = _grad_u[_qp] * _dLdop[_qp];
   for (unsigned int i = 0; i < _nvar; ++i)
@@ -77,7 +77,7 @@ ACInterfaceAniso::gradL()
 }
 
 RealGradient
-ACInterfaceAniso::kappaNablaLPsi()
+ACInterface::kappaNablaLPsi()
 {
   // sum is the product rule gradient \f$ \nabla (L\psi) \f$
   RealGradient sum = _L[_qp] * _grad_test[_i][_qp];
@@ -89,13 +89,13 @@ ACInterfaceAniso::kappaNablaLPsi()
 }
 
 Real
-ACInterfaceAniso::computeQpResidual()
+ACInterface::computeQpResidual()
 {
   return _grad_u[_qp] * kappaNablaLPsi();
 }
 
 Real
-ACInterfaceAniso::computeQpJacobian()
+ACInterface::computeQpJacobian()
 {
   // dsum is the derivative \f$ \frac\partial{\partial \eta} \left( \nabla (L\psi) \right) \f$
   RealGradient dsum =
@@ -117,7 +117,7 @@ ACInterfaceAniso::computeQpJacobian()
 }
 
 Real
-ACInterfaceAniso::computeQpOffDiagJacobian(unsigned int jvar)
+ACInterface::computeQpOffDiagJacobian(unsigned int jvar)
 {
   // get the coupled variable jvar is referring to
   const unsigned int cvar = mapJvarToCvar(jvar);
