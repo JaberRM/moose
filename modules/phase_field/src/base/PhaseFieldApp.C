@@ -17,6 +17,7 @@
 #include "ACGrGrMulti.h"
 #include "ACGrGrPoly.h"
 #include "ACInterface.h"
+#include "ACInterfaceAniso.h"
 #include "ACMultiInterface.h"
 #include "ACInterfaceKobayashi1.h"
 #include "ACInterfaceKobayashi2.h"
@@ -324,6 +325,7 @@ PhaseFieldApp::registerObjects(Factory & factory)
   registerKernel(ACGrGrMulti);
   registerKernel(ACGrGrPoly);
   registerKernel(ACInterface);
+  registerKernel(ACInterfaceAniso);
   registerKernel(ACMultiInterface);
   registerKernel(ACInterfaceKobayashi1);
   registerKernel(ACInterfaceKobayashi2);
