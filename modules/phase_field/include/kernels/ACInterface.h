@@ -40,7 +40,7 @@ protected:
   /// Mobility
   const MaterialProperty<Real> & _L;
   /// Interfacial parameter
-  const MaterialProperty<RealTensorValue> & _kappa;
+  const MaterialProperty<Real> & _kappa;
 
   /// flag set if L is a function of non-linear variables in args
   const bool _variable_L;
@@ -51,7 +51,7 @@ protected:
   /// @}
 
   /// kappa derivative w.r.t. order parameter
-  const MaterialProperty<RealTensorValue> & _dkappadop;
+  const MaterialProperty<Real> & _dkappadop;
 
   /// number of coupled variables
   const unsigned int _nvar;
@@ -63,7 +63,7 @@ protected:
   /// @}
 
   /// kappa derivative w.r.t. other coupled variables
-  std::vector<const MaterialProperty<RealTensorValue> *> _dkappadarg;
+  std::vector<const MaterialProperty<Real> *> _dkappadarg;
 
   /// Gradients for all coupled variables
   std::vector<const VariableGradient *> _gradarg;
